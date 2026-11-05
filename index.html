@@ -1,9 +1,4 @@
-<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}body{margin:0}</style></head><body><title>Orphéon</title>
-<meta name="claude:viewport-fit-sides" content="cover">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=IBM+Plex+Mono:wght@400;500&display=swap">
-<style>
+<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#1A1320"><title>Orphéon</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=IBM+Plex+Mono:wght@400;500&display=swap"><style>:root{padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}body{margin:0}</style><style>
 /* Plan : une colonne. Haut : ambiance, accord en cours, instrument. Centre : pad de jeu. Bas : capteurs.
    Chaque ambiance a sa propre palette ; thème sombre voulu, la page change de couleur avec la musique. */
 :root{
@@ -110,63 +105,92 @@ input[type=range]:disabled::-moz-range-thumb{background:var(--c)}
   .panel{width:330px;flex:none;align-content:start}
   .sl{grid-template-columns:1fr}
 }
+h1{font-size:24px}
+.top{gap:8px}
+.pill[aria-pressed="true"]{background:var(--a2);border-color:var(--a2);color:var(--ink)}
+.pill[aria-pressed="true"] svg{color:var(--ink)}
+.sensors{border:1.5px solid color-mix(in srgb,var(--a1) 70%,var(--line));border-radius:18px;background:color-mix(in srgb,var(--a1) 8%,var(--panel));padding:8px;display:grid;gap:7px;min-width:0;transition:background-color .7s,border-color .7s}
+.shead{display:flex;align-items:center;gap:8px;min-width:0}
+.logo{width:50px;height:26px;color:var(--a1);flex:none;fill:none}
+.shead b{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap}
+.shead span{font:11px var(--mono);color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.chip{justify-items:center;text-align:center;gap:1px;padding:7px 2px 6px;min-height:64px}
+.chip svg{width:22px;height:22px;color:var(--c);fill:none}
+.chip .cs::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--line);margin-right:5px;vertical-align:1px}
+.chip[aria-pressed="true"] .cs::before{background:var(--c);box-shadow:0 0 6px var(--c)}
+.tabrow{display:flex;gap:6px}
+.tabrow .tabs{flex:1;min-width:0}
+.sq{flex:none;width:38px;height:38px;border-radius:19px;border:1.5px solid var(--line);background:var(--panel);color:var(--a2);display:grid;place-items:center;cursor:pointer;padding:0}
+.sq svg{width:20px;height:20px}
+.voice{padding:6px 10px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
-</style>
+</style></head><body>
+
+
+
+
 
 <header class="top">
   <h1>Orphéon</h1>
-  <button class="pill" id="dice" aria-label="Surprends-moi : nouvelle idée musicale"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M7 3h10a4 4 0 0 1 4 4v10a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V7a4 4 0 0 1 4-4zm1.5 5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm7 0a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM12 10.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM8.5 15a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm7 0a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/></svg>Surprends-moi</button>
-  <button class="round" id="play" aria-label="Lancer la musique"><svg id="icoPlay" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.9l10.5-6.5a1 1 0 0 0 0-1.8L9.5 4.6A1 1 0 0 0 8 5.5z"/></svg><svg id="icoPause" viewBox="0 0 24 24" aria-hidden="true" hidden><rect x="6" y="5" width="4.5" height="14" rx="1.2"/><rect x="13.5" y="5" width="4.5" height="14" rx="1.2"/></svg></button>
+  <button class="pill" id="auto" aria-pressed="false" aria-label="Melodia automatica: la melodia suona da sola e tu cambi solo il suono"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 17.5V6.5l10-2V15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6.5" cy="17.5" r="2.6"/><circle cx="16.5" cy="15" r="2.6"/></svg><span>Melodia auto</span></button>
+  <button class="round" id="play" aria-label="Avvia la musica"><svg id="icoPlay" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.9l10.5-6.5a1 1 0 0 0 0-1.8L9.5 4.6A1 1 0 0 0 8 5.5z"/></svg><svg id="icoPause" viewBox="0 0 24 24" aria-hidden="true" hidden><rect x="6" y="5" width="4.5" height="14" rx="1.2"/><rect x="13.5" y="5" width="4.5" height="14" rx="1.2"/></svg></button>
 </header>
 
-<div class="tabs" role="radiogroup" aria-label="Ambiance">
-  <button class="tab" role="radio" aria-checked="true" data-s="0">Lo-fi</button>
-  <button class="tab" role="radio" aria-checked="false" data-s="1">Pop électro</button>
-  <button class="tab" role="radio" aria-checked="false" data-s="2">Ambient</button>
+<section class="sensors" aria-label="Sensori">
+  <div class="shead"><svg class="logo" viewBox="0 0 50 26" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12.5" cy="13" r="10"/><circle cx="9" cy="11" r="1" fill="currentColor" stroke="none"/><circle cx="16" cy="11" r="1" fill="currentColor" stroke="none"/><path d="M8.3 16.2c1.1 1.7 2.6 2.5 4.2 2.5s3.1-.8 4.2-2.5"/><g transform="rotate(14 38 13)"><rect x="33.5" y="4.5" width="9" height="17" rx="2.3"/><path d="M37 18.6h2"/></g><path d="M27.5 8c-1.3 3-1.3 7 0 10M47.5 6.5c1.3 3 1.3 7 0 10"/></svg><b>Sensori</b><span>tocca per attivarli</span></div>
+  <div class="chips">
+    <button class="chip" id="c-tilt" data-k="tilt" aria-pressed="false" data-state="off" title="Movimento del telefono: tempo, ritmo e vibrato"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g transform="rotate(14 12 12)"><rect x="8" y="3.5" width="8" height="17" rx="2.2"/><path d="M11 17.8h2"/></g><path d="M3.5 8c-1 2.6-1 5.4 0 8M20.5 7c1 2.6 1 5.4 0 8"/></svg><span class="cn">Movimento</span><span class="cs">spento</span></button>
+    <button class="chip" id="c-face" data-k="face" aria-pressed="false" data-state="off" title="Fotocamera: bocca, sorriso e sguardo"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="9" cy="10" r="1" fill="currentColor" stroke="none"/><circle cx="15" cy="10" r="1" fill="currentColor" stroke="none"/><path d="M8 14.5c1 1.6 2.4 2.4 4 2.4s3-.8 4-2.4"/></svg><span class="cn">Viso</span><span class="cs">spento</span></button>
+    <button class="chip" id="c-air" data-k="air" aria-pressed="false" data-state="off" title="Microfono: il soffio dà espressione alla melodia"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9h10.5a2.5 2.5 0 1 0-2.5-2.5"/><path d="M3 13.5h14a2.5 2.5 0 1 1-2.5 2.5"/><path d="M3 18h6"/></svg><span class="cn">Soffio</span><span class="cs">spento</span></button>
+    <button class="chip" id="c-hap" data-k="hap" aria-pressed="true" data-state="on" title="Vibrazione del telefono a tempo con la cassa"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="4.5" width="8" height="15" rx="2.2"/><path d="M4.5 9v6M19.5 9v6M2 11v2M22 11v2"/></svg><span class="cn">Vibra</span><span class="cs">attivo</span></button>
+  </div>
+  <p class="msg" id="msg" aria-live="polite" hidden></p>
+  <p class="msg" id="diag" hidden></p>
+</section>
+
+<div class="tabrow">
+  <div class="tabs" role="radiogroup" aria-label="Genere">
+    <button class="tab" role="radio" aria-checked="true" data-s="0">Lo-fi</button>
+    <button class="tab" role="radio" aria-checked="false" data-s="1">Pop elettro</button>
+    <button class="tab" role="radio" aria-checked="false" data-s="2">Ambient</button>
+  </div>
+  <button class="sq" id="dice" aria-label="Sorprendimi: nuova idea musicale" title="Sorprendimi"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M7 3h10a4 4 0 0 1 4 4v10a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V7a4 4 0 0 1 4-4zm1.5 5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm7 0a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM12 10.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM8.5 15a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm7 0a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/></svg></button>
 </div>
 
 <div class="now">
   <div class="chord"><b id="chNow">·</b><span id="chNext"></span></div>
-  <div class="sec"><span id="sec">Prêt</span><button class="mini" id="quant" aria-pressed="true" aria-label="Caler les notes sur le rythme">Calé</button></div>
+  <div class="sec"><span id="sec">Pronto</span><button class="mini" id="quant" aria-pressed="true" aria-label="Allinea le note al ritmo">A tempo</button></div>
   <div class="beats" id="beats" aria-hidden="true"></div>
 </div>
 
 <main class="stage">
   <div class="play">
-    <div class="voices" role="radiogroup" aria-label="Instrument de la mélodie">
-      <button class="voice" data-v="0" role="radio" aria-checked="true"><span class="vn"></span><span class="vs"></span><span class="vb"></span></button>
-      <button class="voice" data-v="1" role="radio" aria-checked="false"><span class="vn"></span><span class="vs"></span><span class="vb"></span></button>
-      <button class="voice" data-v="2" role="radio" aria-checked="false"><span class="vn"></span><span class="vs"></span><span class="vb"></span></button>
+    <div class="voices" role="radiogroup" aria-label="Strumento della melodia">
+      <button class="voice" data-v="0" role="radio" aria-checked="true"><span class="vn"></span><span class="vs"></span></button>
+      <button class="voice" data-v="1" role="radio" aria-checked="false"><span class="vn"></span><span class="vs"></span></button>
+      <button class="voice" data-v="2" role="radio" aria-checked="false"><span class="vn"></span><span class="vs"></span></button>
     </div>
     <div class="padwrap">
-      <canvas id="pad" role="application" aria-label="Pad de mélodie : gauche-droite pour la note, haut-bas pour l'ouverture du son et la réverbération"></canvas>
-      <div class="hint" id="hint"><b>Touche pour lancer la musique</b><span>Gauche-droite : la note, toujours juste. Haut-bas : le son s'ouvre et résonne.</span></div>
+      <canvas id="pad" role="application" aria-label="Pad della melodia: sinistra-destra per la nota, alto-basso per l'apertura del suono e il riverbero"></canvas>
+      <div class="hint" id="hint"><b>Tocca per iniziare</b><span>Sinistra-destra: la nota, sempre intonata. Alto-basso: il suono si apre e risuona. Oppure premi «Melodia auto» e cambia solo il suono.</span></div>
     </div>
   </div>
 
-  <section class="panel" aria-label="Capteurs">
-    <div class="chips">
-      <button class="chip" id="c-tilt" data-k="tilt" aria-pressed="false" data-state="off"><span class="cn">Mouvement</span><span class="cs">simulé</span></button>
-      <button class="chip" id="c-face" data-k="face" aria-pressed="false" data-state="off"><span class="cn">Visage</span><span class="cs">simulé</span></button>
-      <button class="chip" id="c-air" data-k="air" aria-pressed="false" data-state="off"><span class="cn">Souffle</span><span class="cs">simulé</span></button>
-      <button class="chip" id="c-hap" data-k="hap" aria-pressed="true" data-state="on"><span class="cn">Haptique</span><span class="cs">actif</span></button>
-    </div>
+  <section class="panel" aria-label="Regolazioni">
     <div class="sl">
-      <div class="cell" data-g="ui" data-k="energy"><div class="top2"><b>Énergie</b><i>section</i><output></output></div><input type="range" id="s-energy" min="0" max="1" step="0.01" value="0.5" aria-label="Énergie du morceau"></div>
-      <div class="cell" data-g="tilt" data-k="tempo"><div class="top2"><b>Pencher</b><i>tempo</i><output></output></div><input type="range" id="s-tempo" min="0" max="1" step="0.01" value="0.5" aria-label="Tempo, inclinaison avant-arrière"></div>
-      <div class="cell" data-g="tilt" data-k="vib"><div class="top2"><b>Incliner</b><i>vibrato</i><output></output></div><input type="range" id="s-vib" min="0" max="1" step="0.01" value="0" aria-label="Vibrato, inclinaison gauche-droite"></div>
-      <div class="cell" data-g="tilt" data-k="groove"><div class="top2"><b>Secouer</b><i>rythme</i><output></output></div><input type="range" id="s-groove" min="0" max="1" step="0.01" value="0" aria-label="Richesse du rythme, mouvement du téléphone"></div>
-      <div class="cell" data-g="face" data-k="bright"><div class="top2"><b>Bouche</b><i>brillance</i><output></output></div><input type="range" id="s-bright" min="0" max="1" step="0.01" value="0.7" aria-label="Brillance, ouverture de la bouche"></div>
-      <div class="cell" data-g="face" data-k="smile"><div class="top2"><b>Sourire</b><i>étincelles</i><output></output></div><input type="range" id="s-smile" min="0" max="1" step="0.01" value="0" aria-label="Étincelles d'instruments, sourire"></div>
-      <div class="cell" data-g="face" data-k="gaze"><div class="top2"><b>Regard</b><i>timbre</i><output></output></div><input type="range" id="s-gaze" min="-1" max="1" step="0.01" value="-0.7" aria-label="Instrument choisi par le regard"></div>
-      <div class="cell" data-g="air" data-k="breath"><div class="top2"><b>Souffle</b><i>expression</i><output></output></div><input type="range" id="s-breath" min="0" max="1" step="0.01" value="0.7" aria-label="Expression de la mélodie, souffle dans le micro"></div>
+      <div class="cell" data-g="ui" data-k="energy"><div class="top2"><b>Energia</b><i>sezione</i><output></output></div><input type="range" id="s-energy" min="0" max="1" step="0.01" value="0.5" aria-label="Energia del brano"></div>
+      <div class="cell" data-g="tilt" data-k="tempo"><div class="top2"><b>Inclina</b><i>tempo</i><output></output></div><input type="range" id="s-tempo" min="0" max="1" step="0.01" value="0.5" aria-label="Tempo, inclinazione avanti-indietro"></div>
+      <div class="cell" data-g="tilt" data-k="vib"><div class="top2"><b>Di lato</b><i>vibrato</i><output></output></div><input type="range" id="s-vib" min="0" max="1" step="0.01" value="0" aria-label="Vibrato, inclinazione laterale"></div>
+      <div class="cell" data-g="tilt" data-k="groove"><div class="top2"><b>Scuoti</b><i>ritmo</i><output></output></div><input type="range" id="s-groove" min="0" max="1" step="0.01" value="0" aria-label="Ricchezza del ritmo, movimento del telefono"></div>
+      <div class="cell" data-g="face" data-k="bright"><div class="top2"><b>Bocca</b><i>filtro</i><output></output></div><input type="range" id="s-bright" min="0" max="1" step="0.01" value="0.7" aria-label="Filtro: bocca chiusa filtro aperto, bocca aperta filtro chiuso"></div>
+      <div class="cell" data-g="face" data-k="smile"><div class="top2"><b>Sorriso</b><i>scintille</i><output></output></div><input type="range" id="s-smile" min="0" max="1" step="0.01" value="0" aria-label="Scintille di strumenti, sorriso"></div>
+      <div class="cell" data-g="face" data-k="gaze"><div class="top2"><b>Sguardo</b><i>strumento</i><output></output></div><input type="range" id="s-gaze" min="-1" max="1" step="0.01" value="-0.7" aria-label="Strumento scelto con lo sguardo"></div>
+      <div class="cell" data-g="air" data-k="breath"><div class="top2"><b>Soffio</b><i>espressione</i><output></output></div><input type="range" id="s-breath" min="0" max="1" step="0.01" value="0.7" aria-label="Espressione della melodia, soffio nel microfono"></div>
     </div>
     <div class="tools">
-      <div id="tiltTools" hidden><span>Mouvement</span><button class="mini" id="tl-center">Recentrer</button><button class="mini" id="tl-flip">Inverser</button></div>
-      <div id="gazeTools" hidden><span>Regard</span><button class="mini" id="gz-center">Centrer</button><button class="mini" id="gz-flip">Inverser</button></div>
+      <div id="tiltTools" hidden><span>Movimento</span><button class="mini" id="tl-center">Ricentra</button><button class="mini" id="tl-flip">Inverti</button></div>
+      <div id="gazeTools" hidden><span>Sguardo</span><button class="mini" id="gz-center">Centra</button><button class="mini" id="gz-flip">Inverti</button></div>
     </div>
-    <p class="msg" id="msg" aria-live="polite">Les curseurs remplacent les capteurs. Touche un capteur pour l'activer.</p>
-    <p class="msg" id="diag" hidden></p>
   </section>
 </main>
 <video id="cam" playsinline muted aria-hidden="true"></video>
@@ -183,29 +207,29 @@ const inFrame = (() => { try { return window.top !== window.self; } catch (e) { 
 
 /* ---------- théorie : gammes, progressions, ambiances ---------- */
 const PC = ['C', 'D♭', 'D', 'E♭', 'E', 'F', 'G♭', 'G', 'A♭', 'A', 'B♭', 'B'];
-const SOL = ['Do', 'Ré♭', 'Ré', 'Mi♭', 'Mi', 'Fa', 'Sol♭', 'Sol', 'La♭', 'La', 'Si♭', 'Si'];
+const SOL = ['Do', 'Re♭', 'Re', 'Mi♭', 'Mi', 'Fa', 'Sol♭', 'Sol', 'La♭', 'La', 'Si♭', 'Si'];
 const SCALE = { minor: [0, 2, 3, 5, 7, 8, 10], major: [0, 2, 4, 5, 7, 9, 11] };
 const PENT = { minor: [0, 3, 5, 7, 10], major: [0, 2, 4, 7, 9] };
 const MINOR_PROGS = [[0, 5, 2, 6], [0, 3, 6, 2], [0, 6, 5, 6], [0, 4, 5, 3], [5, 6, 0, 4], [0, 2, 6, 3]];
 const MAJOR_PROGS = [[0, 4, 5, 3], [5, 3, 0, 4], [0, 5, 3, 4], [3, 0, 4, 5], [0, 3, 5, 4], [0, 2, 3, 4]];
 const NCOL = 10;
-const DESC = { epiano: 'e-piano', kalimba: 'pincé, boisé', saw: 'synthé lead', pluck: 'staccato', bell: 'cristallin', choir: 'vocal', glass: 'planant' };
+const DESC = { epiano: 'piano elettrico', kalimba: 'pizzicato, legnoso', saw: 'synth lead', pluck: 'staccato', bell: 'cristallino', choir: 'vocale', glass: 'etereo' };
 const SUST = { saw: 1, choir: 1, glass: 1 };
 
 const STYLES = [
   { id: 'lofi', name: 'Lo-fi', bpm: 80, swing: .17, modes: ['minor', 'minor', 'major'], keys: [0, 2, 5, 7, 9, 10], bpc: 1, cut: 6500,
-    tim: ['epiano', 'kalimba', 'choir'], tn: ['Rhodes', 'Kalimba', 'Voix'], comp: 'epiano', spark: 'bell', sm: 'kalimba', bass: 'round', snare: 'snare',
+    tim: ['epiano', 'kalimba', 'choir'], tn: ['Rhodes', 'Kalimba', 'Voce'], comp: 'epiano', spark: 'bell', sm: 'kalimba', bass: 'round', snare: 'snare',
     ext: 4, bdur: 4, cdur: 2.5, cth: .5, sth: .8, duck: .3, rv: .34, crackle: .55,
     P: { kick: ['x.....x...x.....', 'x.....x..xx.....', 'x........x..x...'], snare: ['....X.......X...', '....X.......X..o'],
       hat: ['x.x.x.x.x.x.x.x.', 'xoxoxoxoxoxoxoxo', 'x.xox.x.x.xox.x.'], shk: ['..x...x...x...x.'], oh: ['...............x'],
       bass: ['x.....x...x.....', 'x..x....x.....x.'], comp: ['..x.....x....x..', 'x.....x...x.....'], spark: ['.x..x..x.x..x...'] } },
-  { id: 'pop', name: 'Pop électro', bpm: 108, swing: 0, modes: ['major', 'major', 'minor'], keys: [0, 2, 4, 5, 7, 9], bpc: 1, cut: 20000,
-    tim: ['saw', 'pluck', 'choir'], tn: ['Synthé', 'Pluck', 'Voix'], comp: 'pluck', spark: 'pluck', sm: 'pluck', bass: 'pluck', snare: 'clap',
+  { id: 'pop', name: 'Pop elettro', bpm: 108, swing: 0, modes: ['major', 'major', 'minor'], keys: [0, 2, 4, 5, 7, 9], bpc: 1, cut: 20000,
+    tim: ['saw', 'pluck', 'choir'], tn: ['Synth', 'Pluck', 'Voce'], comp: 'pluck', spark: 'pluck', sm: 'pluck', bass: 'pluck', snare: 'clap',
     ext: 3, bdur: 1.6, cdur: 1.2, cth: .5, sth: .8, duck: .55, rv: .26, crackle: 0,
     P: { kick: ['x...x...x...x...'], snare: ['....X.......X...'], hat: ['x.x.x.x.x.x.x.x.', 'xoxoxoxoxoxoxoxo'], oh: ['..x...x...x...x.'],
       bass: ['..x...x...x...x.', 'x.x.x.x.x.x.x.x.', 'x..x..x...x..x..'], comp: ['x..x..x...x.x...', 'x.x...x.x...x...'], spark: ['xxxxxxxxxxxxxxxx'] } },
   { id: 'amb', name: 'Ambient', bpm: 70, swing: 0, modes: ['major', 'minor', 'major'], keys: [2, 5, 7, 10, 3, 0], bpc: 2, cut: 12000,
-    tim: ['bell', 'glass', 'choir'], tn: ['Cloche', 'Verre', 'Chœur'], comp: 'bell', spark: 'bell', sm: 'bell', bass: 'round', snare: 'rim',
+    tim: ['bell', 'glass', 'choir'], tn: ['Campana', 'Vetro', 'Coro'], comp: 'bell', spark: 'bell', sm: 'bell', bass: 'round', snare: 'rim',
     ext: 4, bdur: 14, cdur: 6, cth: .3, sth: .65, duck: .2, rv: .6, crackle: 0,
     P: { kick: ['x...............', 'x.......x.......'], snare: ['....o.......x...'], hat: ['x.x.x.x.x.x.x.x.'], shk: ['x...x...x...x...'],
       bass: ['x...............'], comp: ['x...x...x...x...'], spark: ['..x...x.....x...'] } }
@@ -217,7 +241,7 @@ const S = { energy: .5, tempo: .5, vib: 0, groove: 0, bright: .7, smile: 0, gaze
 const live = { tilt: false, face: false, air: false };
 let timbre = 0, haptics = true, quantOn = true;
 const st = { style: 0, pending: null, rootPc: 9, mode: 'minor', prog: [0, 5, 2, 6], variant: 0, playing: false, started: false,
-  step: 0, bar: 0, nextT: 0, pendT: 0, grid: [], chord: null, chordPcs: new Set(), prevE: .5, kickT: -9, arpI: 0, sparkI: 0, curStep: -1, smileI: 0, smileUp: false, smileCool: 0, burst: false };
+  step: 0, bar: 0, nextT: 0, pendT: 0, grid: [], chord: null, chordPcs: new Set(), prevE: .5, kickT: -9, arpI: 0, sparkI: 0, curStep: -1, smileI: 0, smileUp: false, smileCool: 0, burst: false, auto: false, motif: null, melody: null, motifBar: -1 };
 const uiq = [];
 const leads = new Map();
 const ripples = [];
@@ -226,7 +250,7 @@ const sparks = [];
 function leadBase() { return 57 + (((st.rootPc - 9) % 12) + 12) % 12; }
 const midiOfCol = i => leadBase() + 12 * Math.floor(i / 5) + PENT[st.mode][i % 5];
 const hz = m => 440 * Math.pow(2, (m - 69) / 12);
-const secName = e => e < .2 ? 'Intro' : e < .4 ? 'Montée' : e < .6 ? 'Groove' : e < .8 ? 'Intense' : 'Drop';
+const secName = e => e < .2 ? 'Intro' : e < .4 ? 'Salita' : e < .6 ? 'Groove' : e < .8 ? 'Intenso' : 'Drop';
 const tempoMul = () => .7 + .6 * S.tempo;
 const bpmNow = () => STY().bpm * tempoMul();
 const eff = () => clamp(S.energy + .4 * S.groove, 0, 1);
@@ -235,7 +259,7 @@ function roll(i) {
   const s = STYLES[i];
   st.style = i; st.mode = pick(s.modes); st.rootPc = pick(s.keys);
   st.prog = pick(st.mode === 'minor' ? MINOR_PROGS : MAJOR_PROGS);
-  st.variant = (Math.random() * 3) | 0; st.arpI = 0; st.sparkI = 0;
+  st.variant = (Math.random() * 3) | 0; st.arpI = 0; st.sparkI = 0; st.motif = null; st.melody = null;
   setTheme();
 }
 function buildChord(deg) {
@@ -252,7 +276,7 @@ function buildChord(deg) {
   if (ext !== 3 && third === 3 && sev === 10 && fifth !== 6) q = 'm7';
   if (ext !== 3 && third === 3 && sev === 11) q = 'm(maj7)';
   if (ext !== 3 && third === 4 && sev === 11) q = 'maj7';
-  return { tones, bass: place(stack[0], 36), pad: [place(stack[0], 43)].concat(tones), pcs: new Set(stack.slice(0, 4).map(m => m % 12)), name: PC[r] + q };
+  return { tones, bass: place(stack[0], 36), pad: [place(stack[0], 43)].concat(tones), pcs: new Set(stack.slice(0, 4).map(m => m % 12)), name: SOL[r] + q };
 }
 
 /* ---------- moteur audio ---------- */
@@ -473,6 +497,7 @@ function barStart(t) {
     padChord(ch.pad, t, 60 / bpmNow() * 4 * s.bpc, 1);
     uiq.push({ t, chord: ch.name, next: nx.name });
   }
+  if (st.auto && st.chord) st.melody = renderMelody();
   const e = eff();
   if (st.prevE < .7 && e >= .7) impact(t);
   st.prevE = e;
@@ -503,6 +528,43 @@ function sparkRun(t, sd) {
     uiq.push({ t: ti, spark: (i + .5) / 7 });
   }
 }
+/* ---------- melodia automatica ---------- */
+const AUTO_RHY = ['1..1..1...1.1...', '1.1...1.1...1...', '1...1.1...1...1.', '1..1..1.1..1..1.', '1.....1.1.1.....', '1.1.1...1...1.1.', '1...1...1.1.1...'];
+function chordCol(c, rootOnly) {
+  const rpc = st.chord ? st.chord.bass % 12 : st.rootPc;
+  let best = c, bd = 99;
+  for (let i = 0; i < NCOL; i++) {
+    const pc = midiOfCol(i) % 12;
+    if (rootOnly ? pc === rpc : st.chordPcs.has(pc)) { const d = Math.abs(i - c); if (d < bd) { bd = d; best = i; } }
+  }
+  return rootOnly && bd === 99 ? chordCol(c) : best;
+}
+function newMotif() {
+  const rhy = pick(AUTO_RHY), seq = []; let d = 0;
+  for (let k = 0; k < 16; k++) if (rhy[k] === '1') { d = clamp(d + pick([-2, -1, -1, 0, 1, 1, 2]), -3, 3); seq.push({ k, d }); }
+  return seq;
+}
+function renderMelody() {
+  const ph = st.bar % 4;
+  if (!st.motif || (st.bar % 8 === 0 && st.motifBar !== st.bar)) { st.motif = newMotif(); st.motifBar = st.bar; }
+  const out = new Array(16).fill(null), sign = ph === 1 ? -1 : 1, base = chordCol(ph === 2 ? 6 : 5);
+  st.motif.forEach((n, i) => {
+    let col = clamp(base + sign * n.d, 0, NCOL - 1);
+    if (n.k % 8 === 0) col = chordCol(col);
+    if (ph === 3 && i === st.motif.length - 1) col = chordCol(col, true);
+    out[n.k] = col;
+  });
+  return out;
+}
+function autoNote(t, k, col, sd) {
+  const kind = STY().tim[timbre];
+  let nx = 16; for (let j = k + 1; j < 16; j++) if (st.melody[j] != null) { nx = j; break; }
+  const y = clamp(.44 + .14 * Math.sin(st.bar * .8 + k * .05), .25, .7);
+  const vel = .6 + (k % 8 === 0 ? .14 : 0) + Math.random() * .1;
+  const n = buildLead(kind, hz(midiOfCol(col)), t, vel, y, leadBus, true);
+  if (n.sust) releaseLead(n, t + Math.max(.12, (nx - k) * sd * .92));
+  uiq.push({ t, auto: { col, y } });
+}
 function scheduleStep(t, step) {
   const s = STY(), P = s.P, k = step % 16, e = eff(), gv = S.groove, v = st.variant, bar = st.bar, sd = 60 / bpmNow() / 4;
   const ch = key => { const a = P[key]; return a ? a[v % a.length][k] : '.'; };
@@ -511,6 +573,7 @@ function scheduleStep(t, step) {
   const hm = () => .88 + Math.random() * .24, jit = () => (Math.random() - .5) * .008;
   uiq.push({ t, s: k });
   if (st.burst) { st.burst = false; sparkRun(t, sd); }
+  if (st.auto && st.melody && st.melody[k] != null && e >= .08 && (k % 4 === 0 || e >= .35)) autoNote(t, k, st.melody[k], sd);
   const fill = (e >= .6 && bar % 4 === 3 && k >= 12) || (gv > .7 && bar % 2 === 1 && k >= 14);
   let c = ch('kick'), g = gate(.35);
   if (c !== '.' && g > 0) kick(t, vel(c) * g * hm());
@@ -586,7 +649,7 @@ function startTransport() {
 function stopTransport() { st.playing = false; playUI(); }
 function playUI() {
   $('#icoPlay').hidden = st.playing; $('#icoPause').hidden = !st.playing;
-  $('#play').setAttribute('aria-label', st.playing ? 'Mettre en pause' : 'Lancer la musique');
+  $('#play').setAttribute('aria-label', st.playing ? 'Metti in pausa' : 'Avvia la musica');
 }
 function queueStyle(i) {
   if (!st.playing) { roll(i); if (ac) styleAudio(); st.chord = null; return; }
@@ -660,7 +723,7 @@ async function keepAwake() {
 cv.addEventListener('pointerdown', e => {
   if (e.pointerType === 'mouse' && e.button !== 0) return;
   e.preventDefault();
-  if (!ensureAudio()) { say('Le son n\'est pas disponible sur ce navigateur.'); return; }
+  if (!ensureAudio()) { say("Il suono non è disponibile su questo browser."); return; }
   try { cv.setPointerCapture(e.pointerId); } catch (err) {}
   if (!st.playing && !st.started) startTransport();
   const p = locate(e);
@@ -679,7 +742,7 @@ function setTimbre(z, by) {
   timbre = z;
   voiceBtns.forEach((b, i) => {
     b.setAttribute('aria-checked', i === z ? 'true' : 'false');
-    $('.vb', b).textContent = i === z ? (by === 'gaze' ? 'au regard' : 'choisi') : '';
+    b.dataset.by = i === z ? by : '';
   });
   paint('gaze', true);
 }
@@ -710,7 +773,14 @@ $('#dice').addEventListener('click', () => {
   else { roll(st.style); if (ac) styleAudio(); }
 });
 $('#play').addEventListener('click', () => { if (st.playing) stopTransport(); else { hint.hidden = true; startTransport(); } });
-$('#quant').addEventListener('click', () => { quantOn = !quantOn; $('#quant').setAttribute('aria-pressed', quantOn ? 'true' : 'false'); $('#quant').textContent = quantOn ? 'Calé' : 'Libre'; });
+$('#auto').addEventListener('click', () => {
+  st.auto = !st.auto;
+  $('#auto').setAttribute('aria-pressed', st.auto ? 'true' : 'false');
+  if (!st.auto) return;
+  hint.hidden = true;
+  if (!st.playing) startTransport(); else if (st.chord) st.melody = renderMelody();
+});
+$('#quant').addEventListener('click', () => { quantOn = !quantOn; $('#quant').setAttribute('aria-pressed', quantOn ? 'true' : 'false'); $('#quant').textContent = quantOn ? 'A tempo' : 'Libero'; });
 function startFromUI() { if (!st.started) { hint.hidden = true; startTransport(); } }
 
 const FMT = {
@@ -718,7 +788,7 @@ const FMT = {
   vib: v => Math.round(v * 100) + '%',
   bright: v => Math.round(v * 100) + '%',
   tempo: v => Math.round(STY().bpm * (.7 + .6 * v)) + ' bpm',
-  groove: v => v < .1 ? 'calme' : v < .4 ? 'vivant' : v < .7 ? 'riche' : 'à fond',
+  groove: v => v < .1 ? 'calmo' : v < .4 ? 'vivace' : v < .7 ? 'ricco' : 'a tutta',
   smile: v => Math.round(v * 100) + '%',
   gaze: () => STY().tn[timbre],
   breath: v => Math.round(v * 100) + '%'
@@ -745,10 +815,10 @@ function paint(k, force) {
 }
 
 /* ---------- capteurs réels ---------- */
-const msg = $('#msg'), say = t => { msg.textContent = t; };
+const msg = $('#msg'), say = t => { msg.textContent = t; msg.hidden = !t; };
 const CHIPS = { tilt: $('#c-tilt'), face: $('#c-face'), air: $('#c-air'), hap: $('#c-hap') };
 const GROUP_KEYS = { tilt: ['tempo', 'vib', 'groove'], face: ['bright', 'smile', 'gaze'], air: ['breath'] };
-const STATE_TXT = { off: 'simulé', on: 'actif', busy: 'chargement', bad: 'bloqué' };
+const STATE_TXT = { off: 'spento', on: 'attivo', busy: 'attendi…', bad: 'bloccato' };
 function chip(k, state) {
   const el = CHIPS[k];
   el.dataset.state = state; $('.cs', el).textContent = STATE_TXT[state];
@@ -760,29 +830,29 @@ function chip(k, state) {
 }
 const WEBVIEW = /; wv\)|FBAN|FBAV|FB_IAB|Instagram|Snapchat|MicroMessenger|Line\//i;
 function reason(k, why, err) {
-  const what = { tilt: 'Le capteur de mouvement', face: 'La caméra', air: 'Le micro' }[k], name = err && err.name || '', msg = err && err.message || '';
-  if (!window.isSecureContext) return what + ' : la page n\'est pas en HTTPS (adresse en ' + location.protocol + '). Ouvre l\'adresse qui commence par https://.';
-  if (inFrame) return what + ' : la page est affichée dans un aperçu. Ouvre-la seule, dans Chrome.';
-  if (WEBVIEW.test(navigator.userAgent)) return what + ' : tu es dans le navigateur intégré d\'une application, qui bloque les capteurs. Copie l\'adresse et ouvre-la dans Chrome.';
-  if (why === 'model') return 'Le suivi du visage n\'a pas pu se charger (' + (msg || 'réseau') + '). Vérifie la connexion et réessaie.';
-  if (msg === 'denied' || name === 'NotAllowedError' || name === 'SecurityError') return what + ' : permission refusée. Touche l\'icône à gauche de l\'adresse, puis Autorisations, et choisis Autoriser. Vérifie aussi Réglages Android › Applications › Chrome › Autorisations. Puis recharge la page.';
-  if (name === 'NotFoundError') return what + ' : aucun appareil trouvé.';
-  if (name === 'NotReadableError') return what + ' : déjà utilisé par une autre application. Ferme-la et réessaie.';
-  if (k === 'tilt') return 'Aucun mouvement reçu. Sur Android : Chrome › Réglages › Paramètres des sites › Capteurs de mouvement › Autorisé. Un ordinateur n\'a pas ce capteur.';
-  return what + ' est refusé ou absent.';
+  const what = { tilt: 'Il sensore di movimento', face: 'La fotocamera', air: 'Il microfono' }[k], name = err && err.name || '', msg = err && err.message || '';
+  if (!window.isSecureContext) return what + ': la pagina non è in HTTPS (indirizzo ' + location.protocol + '). Apri l\'indirizzo che inizia con https://.';
+  if (inFrame) return what + ': la pagina è dentro un\'anteprima. Aprila da sola, in Chrome.';
+  if (WEBVIEW.test(navigator.userAgent)) return what + ': sei nel browser interno di un\'app, che blocca i sensori. Copia l\'indirizzo e aprilo in Chrome.';
+  if (why === 'model') return 'Il riconoscimento del viso non si è caricato (' + (msg || 'rete') + '). Controlla la connessione e riprova.';
+  if (msg === 'denied' || name === 'NotAllowedError' || name === 'SecurityError') return what + ': permesso negato. Tocca l\'icona a sinistra dell\'indirizzo, poi Autorizzazioni, e scegli Consenti. Controlla anche Impostazioni Android › App › Chrome › Autorizzazioni. Poi ricarica la pagina.';
+  if (name === 'NotFoundError') return what + ': nessun dispositivo trovato.';
+  if (name === 'NotReadableError') return what + ': già usato da un\'altra app. Chiudila e riprova.';
+  if (k === 'tilt') return 'Nessun movimento ricevuto. Su Android: Chrome › Impostazioni › Impostazioni sito › Sensori di movimento › Consentito. Un computer non ha questo sensore.';
+  return what + ' è negato o assente.';
 }
 async function showDiag(k, err) {
   const ua = navigator.userAgent, m = /(SamsungBrowser|Firefox|Edg|Chrome|Safari)\/(\d+)/.exec(ua);
-  const parts = ['HTTPS ' + (window.isSecureContext ? 'oui' : 'non'), 'cadre ' + (inFrame ? 'oui' : 'non'), m ? m[1] + ' ' + m[2] : 'navigateur ?'];
-  if (WEBVIEW.test(ua)) parts.push('navigateur intégré');
-  if (err && err.name) parts.push('erreur ' + err.name);
+  const parts = ['HTTPS ' + (window.isSecureContext ? 'sì' : 'no'), 'anteprima ' + (inFrame ? 'sì' : 'no'), m ? m[1] + ' ' + m[2] : 'browser ?'];
+  if (WEBVIEW.test(ua)) parts.push('browser interno');
+  if (err && err.name) parts.push('errore ' + err.name);
   const names = k === 'face' ? ['camera'] : k === 'air' ? ['microphone'] : ['accelerometer', 'gyroscope'];
   for (const nm of names) { try { const r = await navigator.permissions.query({ name: nm }); parts.push(nm + ' ' + r.state); } catch (e) {} }
-  const d = $('#diag'); d.textContent = 'Diagnostic : ' + parts.join(' · '); d.hidden = false;
+  const d = $('#diag'); d.textContent = 'Diagnosi: ' + parts.join(' · '); d.hidden = false;
 }
 function fail(k, why, err) {
   chip(k, 'bad');
-  say(reason(k, why, err) + ' Les curseurs prennent le relais.');
+  say(reason(k, why, err) + ' Per ora i cursori lo sostituiscono.');
   showDiag(k, err);
 }
 
@@ -814,7 +884,7 @@ async function startTilt() {
     };
     window.addEventListener('deviceorientation', tiltH);
     window.addEventListener('devicemotion', motionH);
-    chip('tilt', 'on'); say('Penche le téléphone vers toi ou loin de toi pour changer le tempo. Bouge-le ou secoue-le : le rythme devient plus riche. Incline à gauche ou à droite pour le vibrato.');
+    chip('tilt', 'on'); say("Inclina il telefono avanti o indietro per cambiare il tempo. Muovilo o scuotilo: il ritmo diventa più ricco. Inclinalo a destra o a sinistra per il vibrato.");
   } catch (e) { fail('tilt', null, e); }
 }
 function stopTilt() {
@@ -822,7 +892,7 @@ function stopTilt() {
   if (motionH) { window.removeEventListener('devicemotion', motionH); motionH = null; }
   mot.a = 0; mot.r = 0; oriRate = 0;
 }
-$('#tl-center').addEventListener('click', () => { beta0 = tilt.b; say('Position recentrée : le tempo est normal dans cette position.'); });
+$('#tl-center').addEventListener('click', () => { beta0 = tilt.b; say("Posizione ricentrata: in questa posizione il tempo è normale."); });
 $('#tl-flip').addEventListener('click', () => { tiltDir *= -1; });
 
 const MP = 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.35';
@@ -845,7 +915,7 @@ async function startFace() {
     catch (e) { lm = await mod.FaceLandmarker.createFromOptions(fs, opts('CPU')); }
     vid.srcObject = stream; await vid.play();
     face = { stream, lm, t: 0, lastTime: -1, gx: 0 };
-    chip('face', 'on'); say('Ouvre la bouche pour éclaircir le son, souris pour ajouter des étincelles d\'instruments, regarde un instrument pour le choisir. Si le regard est inversé, touche Inverser.');
+    chip('face', 'on'); say("Chiudi la bocca per aprire il filtro, aprila per ovattare il suono. Sorridi per aggiungere scintille di strumenti, guarda uno strumento per sceglierlo. Se lo sguardo è invertito, tocca Inverti.");
   } catch (e) { stream.getTracks().forEach(t => t.stop()); fail('face', 'model', e); }
 }
 function stopFace() {
@@ -864,12 +934,12 @@ function readFace(now) {
   const mouth = clamp((b.jawOpen || 0) * 1.8, 0, 1);
   const smile = clamp(((b.mouthSmileLeft || 0) + (b.mouthSmileRight || 0)) / 2 * 2.2, 0, 1);
   const gx = ((b.eyeLookInLeft || 0) + (b.eyeLookOutRight || 0) - (b.eyeLookOutLeft || 0) - (b.eyeLookInRight || 0)) / 2;
-  S.bright += (mouth - S.bright) * .4;
+  S.bright += ((1 - mouth) - S.bright) * .4;
   S.smile += (smile - S.smile) * .35;
   face.gx += (gx - face.gx) * .35;
   setGaze(clamp((face.gx - gaze0) * gazeDir * 3.2, -1, 1), 'gaze');
 }
-$('#gz-center').addEventListener('click', () => { if (face) { gaze0 = face.gx; say('Regard recentré : regarde le milieu de l\'écran quand tu touches ce bouton.'); } });
+$('#gz-center').addEventListener('click', () => { if (face) { gaze0 = face.gx; say("Sguardo ricentrato: guarda il centro dello schermo quando tocchi questo pulsante."); } });
 $('#gz-flip').addEventListener('click', () => { gazeDir *= -1; });
 
 let air = null;
@@ -882,7 +952,7 @@ async function startAir() {
     const src = ac.createMediaStreamSource(stream), a = ac.createAnalyser();
     a.fftSize = 1024; src.connect(a);
     air = { stream, src, a, buf: new Float32Array(a.fftSize), floor: .01 };
-    chip('air', 'on'); say('Souffle sur le micro, en bas du téléphone : la mélodie s\'ouvre et gagne en expression. Un casque évite le retour du son.');
+    chip('air', 'on'); say("Soffia sul microfono, in basso nel telefono: la melodia si apre e diventa più espressiva. Con le cuffie eviti il ritorno del suono.");
   } catch (e) { fail('air', null, e); }
 }
 function stopAir() {
@@ -904,13 +974,13 @@ const STOPPERS = { tilt: stopTilt, face: stopFace, air: stopAir };
 ['tilt', 'face', 'air'].forEach(k => CHIPS[k].addEventListener('click', () => {
   const state = CHIPS[k].dataset.state;
   if (state === 'busy') return;
-  if (state === 'on') { STOPPERS[k](); chip(k, 'off'); say('Capteur coupé : les curseurs reprennent la main.'); }
+  if (state === 'on') { STOPPERS[k](); chip(k, 'off'); say("Sensore spento: tornano i cursori."); }
   else STARTERS[k]();
 }));
 function chipHap() {
   const el = CHIPS.hap;
-  if (!navigator.vibrate) { el.disabled = true; $('.cs', el).textContent = 'indispo.'; el.setAttribute('aria-pressed', 'false'); return; }
-  $('.cs', el).textContent = haptics ? 'actif' : 'coupé';
+  if (!navigator.vibrate) { el.disabled = true; $('.cs', el).textContent = 'n/d'; el.setAttribute('aria-pressed', 'false'); return; }
+  $('.cs', el).textContent = haptics ? 'attivo' : 'spento';
   el.setAttribute('aria-pressed', haptics ? 'true' : 'false');
 }
 CHIPS.hap.addEventListener('click', () => { if (!navigator.vibrate) return; haptics = !haptics; chipHap(); if (haptics) buzz(15); });
@@ -944,12 +1014,13 @@ function processUI() {
   while (uiq.length && uiq[0].t <= now) {
     const e = uiq.shift();
     if (e.s !== undefined) st.curStep = e.s;
-    if (e.chord) { $('#chNow').textContent = e.chord; $('#chNext').textContent = 'puis ' + e.next; }
+    if (e.chord) { $('#chNow').textContent = e.chord; $('#chNext').textContent = 'poi ' + e.next; }
     if (e.kick) buzz(10);
     if (e.spark !== undefined) sparks.push({ x: e.spark, y: Math.random(), t: performance.now() });
+    if (e.auto) ripples.push({ x: (e.auto.col + .5) * (W / NCOL), y: e.auto.y * H, t: performance.now() });
   }
   if (st.curStep !== shownStep) { if (pips[shownStep]) pips[shownStep].classList.remove('on'); shownStep = st.curStep; if (pips[shownStep]) pips[shownStep].classList.add('on'); }
-  const sn = st.playing ? secName(eff()) + ' · ' + Math.round(bpmNow()) + ' bpm' : 'En pause';
+  const sn = st.playing ? secName(eff()) + ' · ' + Math.round(bpmNow()) + ' bpm' : 'In pausa';
   if (sn !== shownSec) { shownSec = sn; $('#sec').textContent = sn; }
 }
 const edge = c => 2 + Math.round(170 * Math.pow(c / NCOL, 2.2));
@@ -984,7 +1055,7 @@ function draw() {
     ctx.fillStyle = ct ? C.fg : C.mut; ctx.fillText(SOL[pc], x + w / 2, H - 14);
   }
   ctx.textAlign = 'right'; ctx.fillStyle = C.mut; ctx.globalAlpha = .8;
-  ctx.fillText('ouvert · écho', W - 10, 46); ctx.fillText('fermé · sec', W - 10, H - 34); ctx.globalAlpha = 1;
+  ctx.fillText('aperto · eco', W - 10, 46); ctx.fillText('chiuso · secco', W - 10, H - 34); ctx.globalAlpha = 1;
   for (let i = ripples.length - 1; i >= 0; i--) {
     const r = ripples[i], a = (now - r.t) / 700;
     if (a >= 1) { ripples.splice(i, 1); continue; }
@@ -1019,7 +1090,7 @@ roll(0);
 for (const k in CELLS) paint(k, true);
 setTimbre(0, 'tap');
 chipHap(); playUI();
-window.__orph = { st, S, hf() { if (!an) return 0; an.getByteFrequencyData(fd); let s = 0, n = 0; for (let i = 12; i < 90; i++) { s += fd[i]; n++; } return s / n / 255; }, bpm: () => bpmNow(), level() { if (!an) return 0; an.getFloatTimeDomainData(fdT); let s = 0; for (let i = 0; i < fdT.length; i++) s += fdT[i] * fdT[i]; return Math.sqrt(s / fdT.length); },
+window.__orph = { st, S, hf() { if (!an) return 0; an.getByteFrequencyData(fd); let s = 0, n = 0; for (let i = 12; i < 90; i++) { s += fd[i]; n++; } return s / n / 255; }, bpm: () => bpmNow(), pc: c => midiOfCol(c) % 12, level() { if (!an) return 0; an.getFloatTimeDomainData(fdT); let s = 0; for (let i = 0; i < fdT.length; i++) s += fdT[i] * fdT[i]; return Math.sqrt(s / fdT.length); },
   peak() { if (!an) return 0; an.getFloatTimeDomainData(fdT); let m = 0; for (let i = 0; i < fdT.length; i++) m = Math.max(m, Math.abs(fdT[i])); return m * .9; } };
 requestAnimationFrame(frame);
 })();
