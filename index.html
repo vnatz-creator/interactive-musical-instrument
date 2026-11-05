@@ -19,7 +19,7 @@
 *{box-sizing:border-box}
 html{height:100%;background:var(--bg);transition:background-color .7s}
 body{
-  margin:0;height:100%;min-height:690px;background:var(--bg);color:var(--fg);font:14px/1.35 var(--ui);
+  margin:0;min-height:max(100%,690px);background:var(--bg);color:var(--fg);font:14px/1.35 var(--ui);
   padding-block:10px;
   padding-left:max(16px,env(safe-area-inset-left,0px));
   padding-right:max(16px,env(safe-area-inset-right,0px));
@@ -102,6 +102,7 @@ input[type=range]:disabled::-moz-range-thumb{background:var(--c)}
 .tools{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;font:11px var(--mono);color:var(--mut)}
 .tools>div{display:flex;align-items:center;gap:6px}
 .msg{margin:0;font:11px/1.45 var(--mono);color:var(--mut);min-height:32px;text-wrap:pretty}
+#diag{min-height:0;color:var(--a3);-webkit-user-select:text;user-select:text}
 #cam{position:fixed;left:0;top:0;width:2px;height:2px;opacity:.01;pointer-events:none}
 
 @media (min-width:780px){
@@ -165,6 +166,7 @@ input[type=range]:disabled::-moz-range-thumb{background:var(--c)}
       <div id="gazeTools" hidden><span>Regard</span><button class="mini" id="gz-center">Centrer</button><button class="mini" id="gz-flip">Inverser</button></div>
     </div>
     <p class="msg" id="msg" aria-live="polite">Les curseurs remplacent les capteurs. Touche un capteur pour l'activer.</p>
+    <p class="msg" id="diag" hidden></p>
   </section>
 </main>
 <video id="cam" playsinline muted aria-hidden="true"></video>
@@ -751,16 +753,37 @@ function chip(k, state) {
   const el = CHIPS[k];
   el.dataset.state = state; $('.cs', el).textContent = STATE_TXT[state];
   el.setAttribute('aria-pressed', state === 'on' ? 'true' : 'false');
+  if (state === 'on') $('#diag').hidden = true;
   live[k] = state === 'on';
   GROUP_KEYS[k].forEach(id => { CELLS[id].cell.classList.toggle('live', live[k]); CELLS[id].el.disabled = live[k]; });
   $('#gazeTools').hidden = !live.face; $('#tiltTools').hidden = !live.tilt;
 }
-function fail(k, why) {
+const WEBVIEW = /; wv\)|FBAN|FBAV|FB_IAB|Instagram|Snapchat|MicroMessenger|Line\//i;
+function reason(k, why, err) {
+  const what = { tilt: 'Le capteur de mouvement', face: 'La caméra', air: 'Le micro' }[k], name = err && err.name || '', msg = err && err.message || '';
+  if (!window.isSecureContext) return what + ' : la page n\'est pas en HTTPS (adresse en ' + location.protocol + '). Ouvre l\'adresse qui commence par https://.';
+  if (inFrame) return what + ' : la page est affichée dans un aperçu. Ouvre-la seule, dans Chrome.';
+  if (WEBVIEW.test(navigator.userAgent)) return what + ' : tu es dans le navigateur intégré d\'une application, qui bloque les capteurs. Copie l\'adresse et ouvre-la dans Chrome.';
+  if (why === 'model') return 'Le suivi du visage n\'a pas pu se charger (' + (msg || 'réseau') + '). Vérifie la connexion et réessaie.';
+  if (msg === 'denied' || name === 'NotAllowedError' || name === 'SecurityError') return what + ' : permission refusée. Touche l\'icône à gauche de l\'adresse, puis Autorisations, et choisis Autoriser. Vérifie aussi Réglages Android › Applications › Chrome › Autorisations. Puis recharge la page.';
+  if (name === 'NotFoundError') return what + ' : aucun appareil trouvé.';
+  if (name === 'NotReadableError') return what + ' : déjà utilisé par une autre application. Ferme-la et réessaie.';
+  if (k === 'tilt') return 'Aucun mouvement reçu. Sur Android : Chrome › Réglages › Paramètres des sites › Capteurs de mouvement › Autorisé. Un ordinateur n\'a pas ce capteur.';
+  return what + ' est refusé ou absent.';
+}
+async function showDiag(k, err) {
+  const ua = navigator.userAgent, m = /(SamsungBrowser|Firefox|Edg|Chrome|Safari)\/(\d+)/.exec(ua);
+  const parts = ['HTTPS ' + (window.isSecureContext ? 'oui' : 'non'), 'cadre ' + (inFrame ? 'oui' : 'non'), m ? m[1] + ' ' + m[2] : 'navigateur ?'];
+  if (WEBVIEW.test(ua)) parts.push('navigateur intégré');
+  if (err && err.name) parts.push('erreur ' + err.name);
+  const names = k === 'face' ? ['camera'] : k === 'air' ? ['microphone'] : ['accelerometer', 'gyroscope'];
+  for (const nm of names) { try { const r = await navigator.permissions.query({ name: nm }); parts.push(nm + ' ' + r.state); } catch (e) {} }
+  const d = $('#diag'); d.textContent = 'Diagnostic : ' + parts.join(' · '); d.hidden = false;
+}
+function fail(k, why, err) {
   chip(k, 'bad');
-  const what = { tilt: 'Le capteur de mouvement', face: 'La caméra', air: 'Le micro' }[k];
-  if (why === 'model') say('Le suivi du visage n\'a pas pu se charger (réseau ou navigateur). Les curseurs prennent le relais.');
-  else if (inFrame) say(what + ' n\'est pas disponible dans cet aperçu. Les curseurs prennent le relais ; ouvre la page seule, en HTTPS, pour l\'activer.');
-  else say(what + ' est refusé ou absent (il faut une page en HTTPS). Les curseurs prennent le relais.');
+  say(reason(k, why, err) + ' Les curseurs prennent le relais.');
+  showDiag(k, err);
 }
 
 let tiltH = null, motionH = null, beta0 = 0, tiltDir = 1, oriRate = 0, prevG = 0, prevB = 0, prevT = 0;
@@ -792,7 +815,7 @@ async function startTilt() {
     window.addEventListener('deviceorientation', tiltH);
     window.addEventListener('devicemotion', motionH);
     chip('tilt', 'on'); say('Penche le téléphone vers toi ou loin de toi pour changer le tempo. Bouge-le ou secoue-le : le rythme devient plus riche. Incline à gauche ou à droite pour le vibrato.');
-  } catch (e) { fail('tilt'); }
+  } catch (e) { fail('tilt', null, e); }
 }
 function stopTilt() {
   if (tiltH) { window.removeEventListener('deviceorientation', tiltH); tiltH = null; }
@@ -812,7 +835,7 @@ async function startFace() {
   try {
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) throw new Error('nomedia');
     stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: { ideal: 480 }, height: { ideal: 360 } }, audio: false });
-  } catch (e) { return fail('face'); }
+  } catch (e) { return fail('face', null, e); }
   try {
     const mod = await import(MP + '/vision_bundle.mjs');
     const fs = await mod.FilesetResolver.forVisionTasks(MP + '/wasm');
@@ -823,7 +846,7 @@ async function startFace() {
     vid.srcObject = stream; await vid.play();
     face = { stream, lm, t: 0, lastTime: -1, gx: 0 };
     chip('face', 'on'); say('Ouvre la bouche pour éclaircir le son, souris pour ajouter des étincelles d\'instruments, regarde un instrument pour le choisir. Si le regard est inversé, touche Inverser.');
-  } catch (e) { stream.getTracks().forEach(t => t.stop()); fail('face', 'model'); }
+  } catch (e) { stream.getTracks().forEach(t => t.stop()); fail('face', 'model', e); }
 }
 function stopFace() {
   if (!face) return;
@@ -860,7 +883,7 @@ async function startAir() {
     a.fftSize = 1024; src.connect(a);
     air = { stream, src, a, buf: new Float32Array(a.fftSize), floor: .01 };
     chip('air', 'on'); say('Souffle sur le micro, en bas du téléphone : la mélodie s\'ouvre et gagne en expression. Un casque évite le retour du son.');
-  } catch (e) { fail('air'); }
+  } catch (e) { fail('air', null, e); }
 }
 function stopAir() {
   if (!air) return;
